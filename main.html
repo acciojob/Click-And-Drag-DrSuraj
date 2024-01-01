@@ -3,7 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <title>Click and Drag</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+
+    .items {
+      display: flex;
+      overflow: hidden;
+    }
+
+    .item {
+      width: 100px;
+      height: 100px;
+      background-color: #3498db;
+      color: #fff;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      cursor: grab;
+    }
+  </style>
 </head>
 <body>
   <div class="items">
@@ -35,8 +58,38 @@
   </div>
 
 <script>
-//Your code goes here 
+  const itemsContainer = document.querySelector('.items');
+  let isDragging = false;
+  let startPosition = 0;
+  let currentTranslate = 0;
+
+  itemsContainer.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    startPosition = e.clientX - itemsContainer.offsetLeft;
+    itemsContainer.style.cursor = 'grabbing';
+  });
+
+  itemsContainer.addEventListener('mouseup', () => {
+    isDragging = false;
+    itemsContainer.style.cursor = 'grab';
+  });
+
+  itemsContainer.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    const newPosition = e.clientX - startPosition;
+    itemsContainer.style.transform = `translateX(${currentTranslate + newPosition}px)`;
+  });
+
+  itemsContainer.addEventListener('mouseleave', () => {
+    isDragging = false;
+    itemsContainer.style.cursor = 'grab';
+  });
+
+  itemsContainer.addEventListener('transitionend', () => {
+    currentTranslate = parseInt(getComputedStyle(itemsContainer).transform.split(',')[4]) || 0;
+  });
+
 </script>
 
-  </body>
+</body>
 </html>
